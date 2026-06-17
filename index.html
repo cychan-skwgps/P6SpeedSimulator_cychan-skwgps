@@ -339,19 +339,19 @@
     const actualStep = baseStep * zoomScale; 
     
     ruler.innerHTML = '';
-    // 關鍵修改：將 Math.floor 改為 Math.ceil，並往左右各多擴展 1 格
-    const maxTicks = Math.ceil((width / 2) / baseStep) + 1;
+    // 保持您的格數計算邏輯
+    const maxTicks = Math.floor((width / 2) / baseStep);
     
     for (let i = -maxTicks; i <= maxTicks; i++) {
         const span = document.createElement('span');
         const value = Math.round(i * actualStep);
         span.innerText = value;
         
-        // 這裡可以透過給予 span 負的 margin-left 來微調數字向左移動
-        // 主要是為了解決文字本身有寬度、預設靠左對齊的問題
-        span.style.marginLeft = "-15px"; // 你可以把 -15px 改成 -20px 讓它更往左移
-        span.style.width = "30px";       // 給予固定寬度，讓文字在自己的格子裡置中
-        span.style.textAlign = "center";
+        // --- 💡 修正對齊線的關鍵程式碼 ---
+        span.style.width = "0px";         // 1. 將元件實體寬度設為 0，讓它的起點轉化為一根不佔空間的「軸線」
+        span.style.overflow = "visible";  // 2. 允許文字超出 0px 的範圍顯示，這樣數字才不會不見
+        span.style.textAlign = "center";  // 3. 讓文字以這根 0px 的軸線為中心點「向左右兩側均勻展開」
+        // ---------------------------------
         
         ruler.appendChild(span);
     }
