@@ -333,20 +333,29 @@
         }
 
         function drawRuler() {
-            const ruler = document.getElementById('ruler');
-            const width = window.innerWidth; 
-            const baseStep = 100;
-            const actualStep = baseStep * zoomScale; 
-            
-            ruler.innerHTML = '';
-            const maxTicks = Math.floor((width / 2) / baseStep);
-            for (let i = -maxTicks; i <= maxTicks; i++) {
-                const span = document.createElement('span');
-                const value = Math.round(i * actualStep);
-                span.innerText = value;
-                ruler.appendChild(span);
-            }
-        }
+    const ruler = document.getElementById('ruler');
+    const width = window.innerWidth; 
+    const baseStep = 100;
+    const actualStep = baseStep * zoomScale; 
+    
+    ruler.innerHTML = '';
+    // 關鍵修改：將 Math.floor 改為 Math.ceil，並往左右各多擴展 1 格
+    const maxTicks = Math.ceil((width / 2) / baseStep) + 1;
+    
+    for (let i = -maxTicks; i <= maxTicks; i++) {
+        const span = document.createElement('span');
+        const value = Math.round(i * actualStep);
+        span.innerText = value;
+        
+        // 這裡可以透過給予 span 負的 margin-left 來微調數字向左移動
+        // 主要是為了解決文字本身有寬度、預設靠左對齊的問題
+        span.style.marginLeft = "-15px"; // 你可以把 -15px 改成 -20px 讓它更往左移
+        span.style.width = "30px";       // 給予固定寬度，讓文字在自己的格子裡置中
+        span.style.textAlign = "center";
+        
+        ruler.appendChild(span);
+    }
+}
 
         function updateGrid() {
             const step = 100 / zoomScale;
