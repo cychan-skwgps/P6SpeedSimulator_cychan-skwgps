@@ -360,14 +360,21 @@
         function updateGrid() {
     const step = 100 / zoomScale;
     
-    // 1. 繪製一條透明的垂直線
-    document.getElementById('topArea').style.backgroundImage = `linear-gradient(to right, rgba(203, 213, 225, 0.4) 3px, transparent 3px)`;
+    // 💡 修正：將線段移動到網格的「正中央內部」
+    // 使用 calc(50% - 0.5px) 到 calc(50% + 0.5px)，可以讓這條 1px 的灰色線完美置中於每格內部
+    document.getElementById('topArea').style.backgroundImage = `
+        linear-gradient(to right, 
+            transparent calc(50% - 0.5px), 
+            rgba(203, 213, 225, 0.4) calc(50% - 0.5px), 
+            rgba(203, 213, 225, 0.4) calc(50% + 0.5px), 
+            transparent calc(50% + 0.5px)
+        )
+    `;
     
-    // 2. 設定網格的寬度
+    // 這裡控制網格的寬度隨縮放比例改變
     document.getElementById('topArea').style.backgroundSize = `${step}px 100%`;
     
-    // 關鍵修改：將原來的 center center 改為 50% center
-    // 這樣背景網格線就會精準鎖定在畫面的「正中央 (50%)」，也就是 0 點的位置！
+    // 配合參考0點的做法，固定在畫面正中央（50%）開始向外平鋪
     document.getElementById('topArea').style.backgroundPosition = `50% center`;
 }
 
