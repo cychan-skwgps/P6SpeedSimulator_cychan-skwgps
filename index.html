@@ -301,7 +301,7 @@
                     startOffset: parseFloat(document.getElementById(`pos_${i}`).value) || 0,
                     speed: parseFloat(document.getElementById(`speed_${i}`).value) || 0,
                     direction: parseInt(document.getElementById(`dir_${i}`).value),
-                    flip: parseInt(document.getElementById(`flip_${i}`).value)
+                    flip: parseInt(document.getElementById(`flip_${i}`).value) || -1
                 };
                 const laneHeight = stageHeight / count;
                 const objEl = document.createElement('div');
