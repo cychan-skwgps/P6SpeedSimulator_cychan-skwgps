@@ -123,7 +123,7 @@
             </div>
         </div>
 
-        <div id="ruler" class="absolute bottom-2 w-full flex justify-between px-2 text-[11px] text-slate-400 font-bold font-mono pointer-events-none"></div>
+        <div id="ruler" class="absolute bottom-2 w-full text-[11px] text-slate-400 font-bold font-mono pointer-events-none"></div>
         <div id="tracks" class="relative h-full w-full"></div>
     </div>
 
@@ -332,26 +332,27 @@
             }
         }
 
-        function drawRuler() {
+       function drawRuler() {
     const ruler = document.getElementById('ruler');
     const width = window.innerWidth; 
     const baseStep = 100;
     const actualStep = baseStep * zoomScale; 
+    const stepPx = 100 / zoomScale; // 畫面上網格線的實際像素間距
     
     ruler.innerHTML = '';
-    // 保持您的格數計算邏輯
-    const maxTicks = Math.floor((width / 2) / baseStep);
+    
+    // 計算畫面左右兩側各自需要生出多少個刻度數字
+    const maxTicks = Math.floor((width / 2) / stepPx);
     
     for (let i = -maxTicks; i <= maxTicks; i++) {
         const span = document.createElement('span');
         const value = Math.round(i * actualStep);
         span.innerText = value;
         
-        // --- 💡 修正對齊線的關鍵程式碼 ---
-        span.style.width = "0px";         // 1. 將元件實體寬度設為 0，讓它的起點轉化為一根不佔空間的「軸線」
-        span.style.overflow = "visible";  // 2. 允許文字超出 0px 的範圍顯示，這樣數字才不會不見
-        span.style.textAlign = "center";  // 3. 讓文字以這根 0px 的軸線為中心點「向左右兩側均勻展開」
-        // ---------------------------------
+        // 💡 關鍵修正：使用絕對定位，以中央 (50%) 為基準點，精確對齊垂直線
+        span.style.position = "absolute";
+        span.style.left = `calc(50% + ${i * stepPx}px)`;
+        span.style.transform = "translateX(-50%)"; // 讓文字中心點完美對齊軸線
         
         ruler.appendChild(span);
     }
